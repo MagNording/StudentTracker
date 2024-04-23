@@ -52,7 +52,38 @@ public class StudentController {
     }
 
     @GetMapping("/search/byFullName")
-    public List<Student> searchByFullName(@RequestParam String firstName, @RequestParam String lastName) {
+    public List<Student> searchByFullName(@RequestParam String firstName,
+                                          @RequestParam String lastName) {
         return studentService.searchStudentsByFullName(firstName, lastName);
+    }
+
+    @PostMapping
+    public ResponseEntity<Student> addStudent(@RequestBody Student student) {
+        Student newStudent = studentService.addStudent(student);
+        return ResponseEntity.ok(newStudent);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Student> updateStudent(@PathVariable Long id,
+                                                 @RequestBody Student student) {
+        if (!id.equals(student.getId())) {
+            return ResponseEntity.badRequest().build();  // Handling potential ID mismatches
+        }
+        try {
+            Student updatedStudent = studentService.updateStudent(id, student);
+            return ResponseEntity.ok(updatedStudent);
+        } catch (StudentNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
+        try {
+            studentService.deleteStudent(id);
+            return ResponseEntity.noContent().build();
+        } catch (StudentNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
