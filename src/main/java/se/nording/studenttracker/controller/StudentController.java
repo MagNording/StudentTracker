@@ -68,7 +68,7 @@ public class StudentController {
     public ResponseEntity<Student> updateStudent(@PathVariable Long id,
                                                  @RequestBody Student student) {
         if (!id.equals(student.getId())) {
-            return ResponseEntity.badRequest().build();  // Handling potential ID mismatches
+            return ResponseEntity.badRequest().build();
         }
         try {
             Student updatedStudent = studentService.updateStudent(id, student);

@@ -1,7 +1,9 @@
 package se.nording.studenttracker.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 public class Student {
@@ -16,8 +18,12 @@ public class Student {
     @Column(name="last_name")
     @NotBlank(message = "Last name is required")
     private String lastName;
-    @NotBlank(message = "Email is required")
+
+    @NotBlank(message = "Email required")
+    @Email(message = "Valid email is required")
     private String email;
+
+    @Pattern(regexp="^\\+?[0-9\\s.()-]{7,20}$", message = "Invalid phone number")
     private String phone;
 
     public Student() {

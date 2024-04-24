@@ -23,4 +23,15 @@ public class GlobalExceptionHandler {
         logger.error("Invalid request: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleGeneralException(Exception ex) {
+        logger.error("An unexpected error occurred: {}", ex.getMessage());
+        ApiErrorResponse apiErrorResponse = new ApiErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "An unexpected error occurred. Please try again later.");
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(apiErrorResponse);
+    }
 }
