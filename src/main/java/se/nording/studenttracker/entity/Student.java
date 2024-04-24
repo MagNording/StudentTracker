@@ -1,6 +1,7 @@
 package se.nording.studenttracker.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Student {
@@ -9,11 +10,13 @@ public class Student {
     private Long id;
 
     @Column(name="first_name")
+    @NotBlank(message = "First name is required")
     private String firstName;
 
     @Column(name="last_name")
+    @NotBlank(message = "Last name is required")
     private String lastName;
-
+    @NotBlank(message = "Email is required")
     private String email;
     private String phone;
 

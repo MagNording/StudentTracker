@@ -1,5 +1,6 @@
 package se.nording.studenttracker.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.nording.studenttracker.entity.Student;
@@ -58,7 +59,7 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<Student> addStudent(@RequestBody Student student) {
+    public ResponseEntity<Student> addStudent(@Valid @RequestBody Student student) {
         Student newStudent = studentService.addStudent(student);
         return ResponseEntity.ok(newStudent);
     }
