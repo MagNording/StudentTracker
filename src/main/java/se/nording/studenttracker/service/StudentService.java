@@ -7,6 +7,7 @@ import se.nording.studenttracker.exceptions.StudentNotFoundException;
 import se.nording.studenttracker.repository.StudentRepo;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -60,6 +61,21 @@ public class StudentService {
         existingStudent.setFirstName(student.getFirstName());
         existingStudent.setLastName(student.getLastName());
         existingStudent.setEmail(student.getEmail());
+        return studentRepo.save(existingStudent);
+    }
+
+    @Transactional // Jätteskönt med patch-metoder som uppdaterar enbart de fält som skickas in
+    public Student patchStudent(Long id, Map<String, Object> updates) {
+        Student existingStudent = findStudentById(id);
+        updates.forEach((key, value) -> {
+            switch (key) {
+                case "firstName" -> existingStudent.setFirstName((String) value);
+                case "lastName" -> existingStudent.setLastName((String) value);
+                case "email" -> existingStudent.setEmail((String) value);
+                case "phone" -> existingStudent.setPhone((String) value);
+                default -> throw new IllegalArgumentException("Invalid field: " + key);
+            }
+        });
         return studentRepo.save(existingStudent);
     }
 

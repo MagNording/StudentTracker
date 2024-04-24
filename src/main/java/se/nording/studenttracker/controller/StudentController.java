@@ -8,6 +8,7 @@ import se.nording.studenttracker.exceptions.StudentNotFoundException;
 import se.nording.studenttracker.service.StudentService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -27,12 +28,8 @@ public class StudentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
-        try {
-            Student student = studentService.findStudentById(id);
-            return ResponseEntity.ok(student);
-        } catch (StudentNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
+        Student student = studentService.findStudentById(id);
+        return ResponseEntity.ok(student);
     }
 
     @GetMapping("/search/byEmail")
@@ -68,24 +65,23 @@ public class StudentController {
     public ResponseEntity<Student> updateStudent(@PathVariable Long id,
                                                  @RequestBody Student student) {
         if (!id.equals(student.getId())) {
-            return ResponseEntity.badRequest().build();
+            throw new IllegalArgumentException("Mismatched ID in request path and body");
         }
-        try {
-            Student updatedStudent = studentService.updateStudent(id, student);
-            return ResponseEntity.ok(updatedStudent);
-        } catch (StudentNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
+        Student updatedStudent = studentService.updateStudent(id, student);
+        return ResponseEntity.ok(updatedStudent);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Student> patchStudent(@PathVariable Long id,
+                                                @RequestBody Map<String, Object> updates) {
+        Student updatedStudent = studentService.patchStudent(id, updates);
+        return ResponseEntity.ok(updatedStudent);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
-        try {
-            studentService.deleteStudent(id);
-            return ResponseEntity.noContent().build();
-        } catch (StudentNotFoundException ex) {
-            return ResponseEntity.notFound().build();
-        }
+        studentService.deleteStudent(id);
+        return ResponseEntity.noContent().build();
     }
 
 
@@ -102,7 +98,6 @@ public class StudentController {
 //            students = studentService.searchStudentsByLastName(lastName);
 //        } else {
 //            return ResponseEntity.badRequest().body(null); // eller returnera alla studenter eller tomt
-//
 //
 //        }
 //        return ResponseEntity.ok(students);
