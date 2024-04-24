@@ -87,4 +87,25 @@ public class StudentController {
             return ResponseEntity.notFound().build();
         }
     }
+
+
+//    @GetMapping("/search") // Alternativ sökmetod som tar flera parametrar
+//    public ResponseEntity<List<Student>> searchStudents(@RequestParam(required = false) String email,
+//                                                        @RequestParam(required = false) String firstName,
+//                                                        @RequestParam(required = false) String lastName) {
+//        List<Student> students;
+//        if (firstName != null && lastName != null) {
+//            students = studentService.searchStudentsByFullName(firstName, lastName);
+//        } else if (firstName != null) {
+//            students = studentService.searchStudentsByFirstName(firstName);
+//        } else if (lastName != null) {
+//            students = studentService.searchStudentsByLastName(lastName);
+//        } else {
+//            return ResponseEntity.badRequest().body(null); // eller returnera alla studenter eller tomt
+//
+//
+//        }
+//        return ResponseEntity.ok(students);
+//    }
+
 }
