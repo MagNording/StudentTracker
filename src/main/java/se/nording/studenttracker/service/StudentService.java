@@ -64,7 +64,7 @@ public class StudentService {
         return studentRepo.save(existingStudent);
     }
 
-    @Transactional // Jätteskönt med patch-metoder som uppdaterar enbart de fält som skickas in
+    @Transactional
     public Student patchStudent(Long id, Map<String, Object> updates) {
         Student existingStudent = findStudentById(id);
         updates.forEach((key, value) -> {
