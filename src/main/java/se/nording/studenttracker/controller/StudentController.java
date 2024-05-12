@@ -1,6 +1,7 @@
 package se.nording.studenttracker.controller;
 
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.nording.studenttracker.entity.Student;
@@ -15,6 +16,8 @@ import java.util.Optional;
 @RequestMapping("/students")
 public class StudentController {
 
+    private final Logger logger = org.slf4j.LoggerFactory.getLogger(StudentController.class);
+
     private final StudentService studentService;
 
     public StudentController(StudentService studentService) {
@@ -28,30 +31,37 @@ public class StudentController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Student> getStudentById(@PathVariable Long id) {
+        logger.info("Request to get student by ID: {}", id);
         Student student = studentService.findStudentById(id);
         return ResponseEntity.ok(student);
     }
 
-    @GetMapping("/search/byEmail")
-    public ResponseEntity<Student> searchByEmail(@RequestParam String email) {
+    @GetMapping("/search/byEmail/{email}")
+    public ResponseEntity<Student> searchByEmail(@PathVariable String email) {
+        logger.info("Request to search by email: {}", email);
         Optional<Student> student = studentService.searchStudentByEmail(email);
         return student.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/search/byFirstName")
-    public List<Student> searchByFirstName(@RequestParam String firstName) {
-        return studentService.searchStudentsByFirstName(firstName);
+    @GetMapping("/search/byFirstName/{firstName}")
+    public ResponseEntity<List<Student>> searchByFirstName(@PathVariable String firstName) {
+        logger.info("Request to search by first name: {}", firstName);
+        List<Student> students = studentService.searchStudentsByFirstName(firstName);
+        return students.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(students);
     }
 
-    @GetMapping("/search/byLastName")
-    public List<Student> searchByLastName(@RequestParam String lastName) {
-        return studentService.searchStudentsByLastName(lastName);
+    @GetMapping("/search/byLastName/{lastName}")
+    public ResponseEntity<List<Student>> searchByLastName(@PathVariable String lastName) {
+        logger.info("Request to search by last name: {}", lastName);
+        List<Student> students = studentService.searchStudentsByLastName(lastName);
+        return students.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(students);
     }
 
     @GetMapping("/search/byFullName")
     public List<Student> searchByFullName(@RequestParam String firstName,
                                           @RequestParam String lastName) {
+        logger.info("Request to search by full name: {} {}", firstName, lastName);
         return studentService.searchStudentsByFullName(firstName, lastName);
     }
 
