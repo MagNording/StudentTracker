@@ -81,7 +81,7 @@ public class StudentController {
         return ResponseEntity.ok(updatedStudent);
     }
 
-    @PatchMapping("/{id}") // Skönt med patch som uppdaterar enbart de fält som skickas in
+    @PatchMapping("/{id}")
     public ResponseEntity<Student> patchStudent(@PathVariable Long id,
                                                 @RequestBody Map<String, Object> updates) {
         Student updatedStudent = studentService.patchStudent(id, updates);
